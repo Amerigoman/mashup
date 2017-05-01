@@ -1,4 +1,5 @@
 .idea
 /mashup
 source
+node_modules
 *.pyc
