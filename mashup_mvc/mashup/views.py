@@ -1,5 +1,50 @@
 from django.http import HttpResponse
+from django.db.models import Q
 from .models import PostalCode, Street
+from rest_framework import viewsets, generics
+from .serializers import PostalCodeSerializer,\
+    StreetSerializer
+
+
+class PostalCodeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = PostalCode.objects.all().order_by('-postal_code')
+    serializer_class = PostalCodeSerializer
+
+
+class StreetViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Street.objects.all()
+    serializer_class = StreetSerializer
+
+
+class PostalCodeListDependsOnCoordinates(generics.ListAPIView):
+    serializer_class = PostalCodeSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        sw_lat, sw_lng = self.kwargs['sw'].split(',')
+        ne_lat, ne_lng = self.kwargs['ne'].split(',')
+
+        if sw_lng <= ne_lng:
+            results = PostalCode.objects.filter(
+                Q(latitude__gte=sw_lat) & Q(latitude__lte=ne_lat) &
+                (Q(longitude__gte=sw_lng) & Q(longitude__lte=ne_lng))
+            ).order_by('?')[:15]
+        else:
+            results = PostalCode.objects.filter(
+                Q(latitude__gte=sw_lat) & Q(latitude__lte=ne_lat) &
+                (Q(longitude__gte=sw_lng) | Q(longitude__lte=ne_lng))
+            ).order_by('?')[:15]
+
+        return results
 
 
 def write_bd(request):

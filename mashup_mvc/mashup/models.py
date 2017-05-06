@@ -4,7 +4,8 @@ from django.utils.translation import ugettext as _
 
 class PostalCode(models.Model):
     postal_code = models.PositiveIntegerField(
-        unique=True, verbose_name=_('Postal Code')
+        unique=True, verbose_name=_('Postal Code'),
+        primary_key=True
     )
     area = models.CharField(max_length=64, verbose_name=_('Area'))
     region = models.CharField(max_length=64, verbose_name=_('Region'))
@@ -13,8 +14,8 @@ class PostalCode(models.Model):
     longitude = models.FloatField(verbose_name=_('Longitude'))
 
     def __str__(self):
-        return '{} :: {} -- {}, {}, {}'.format(
-            str(self.id), str(self.postal_code),
+        return '{} -- {}, {}, {}'.format(
+            str(self.postal_code),
             self.area, self.region, self.city
         )
 

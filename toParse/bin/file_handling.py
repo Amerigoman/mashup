@@ -46,7 +46,7 @@ def make_part_of_data(part):
         print('part :: {}, delta :: {}'.format(part, end - start))
 
         for c in range(1, len(lines)):
-            temp = LineRecord(c, lines[c])
+            temp = LineRecord(c, lines[c], part)
             line_instances.append(temp)
 
         print_app_in_process_time(time_start, 'LineRecord formed')
