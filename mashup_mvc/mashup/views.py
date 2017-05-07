@@ -1,9 +1,14 @@
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Q
 from .models import PostalCode, Street
 from rest_framework import viewsets, generics
 from .serializers import PostalCodeSerializer,\
     StreetSerializer
+
+
+def index(request):
+    return render(request, "index.html")
 
 
 class PostalCodeViewSet(viewsets.ModelViewSet):

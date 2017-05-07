@@ -4,3 +4,5 @@ source
 node_modules
 *.pyc
 pset8
+npm-debug.log
+client_example

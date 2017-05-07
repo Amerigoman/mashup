@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url ,include
 from django.contrib import admin
 from rest_framework import routers
+from django_js_reverse.views import urls_js
 from mashup import views
 
 
@@ -25,8 +26,10 @@ router.register(r'streets', views.StreetViewSet)
 
 
 urlpatterns = [
+    url(r'^', include('mashup.urls'), name='mashup'),
     url(r'^admin/', admin.site.urls),
-    url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^mashup/', include('mashup.urls'), name='mashup')
+    url(r'^api/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls',
+                               namespace='rest_framework')),
+    url(r'^jsreverse/$', urls_js, name='js_reverse'),
 ]

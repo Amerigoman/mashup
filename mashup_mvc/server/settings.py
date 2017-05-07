@@ -38,10 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'mashup',
+    # Third party apps
     'rest_framework',
-    'generic_relations',
+    'django_js_reverse',
+    'webpack_loader',
+
+    # Project apps
+    'mashup',
 ]
+
+JS_REVERSE_JS_MINIFY = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -117,7 +123,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
     ],
-    'PAGE_SIZE': 10
+    # 'PAGE_SIZE': 10
 }
 
 # Internationalization
@@ -138,3 +144,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+# Setup webpack loader
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': False,
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}
