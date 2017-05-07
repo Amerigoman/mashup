@@ -16,6 +16,7 @@ class PostalCodeAdmin(admin.ModelAdmin):
             'classes': ['collapse']
         }),
     ]
+    search_fields = ['postal_code']
     inlines = [StreetInline]
 
 
