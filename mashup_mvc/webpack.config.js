@@ -33,7 +33,7 @@ module.exports = {
     loaders: [{
       test: /\.js$/,
       loaders: ['react-hot', 'babel'],
-      exclude: /node_modules/,
+      exclude: [/node_modules/, /google-maps-react/],
       include: __dirname
     }, {
       test: /\.js$/,

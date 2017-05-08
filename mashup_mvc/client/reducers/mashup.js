@@ -1,9 +1,7 @@
 import {
-    GET_TODOS,
-    ADD_TODO,
-    DELETE_TODO,
-    EDIT_TODO
-} from '../constants/ActionTypes';
+    GET_POSTAL_CODES,
+    GET_BOUNDS
+} from '../constants/MashupTypes';
 
 const initialState = {
   pos: { lat: 49.9151803, lng: 36.416867 }
@@ -12,9 +10,12 @@ const initialState = {
 export default function mashup(state = initialState, action) {
   switch (action.type) {
 
-  // case GET_TODOS:
-  //   return [...action.todos];
-  //
+  case GET_POSTAL_CODES:
+    return { ...state, codes: action.codes };
+  
+  case GET_BOUNDS:
+    return { ...state, bounds: action.bounds };
+    
   // case ADD_TODO:
   //   return [...state, action.todo];
   //

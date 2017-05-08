@@ -1,4 +1,4 @@
-import * as types from '../constants/ActionTypes';
+import * as types from '../constants/MashupTypes';
 
 // from: https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
 function getCookie(name) {
@@ -17,11 +17,36 @@ function getCookie(name) {
   return cookieValue;
 }
 
-// export function getTodos() {
-//   return fetch(Urls.todo_list(), {
-//     credentials: 'same-origin'
-//   }).then(response => response.json()).then(json => ({
-//     type: types.GET_TODOS,
-//     todos: json
-//   }));
-// }
+export function getPostalCodes(sw, ne) {
+  return fetch(Urls['mashup:coords'](sw , ne), {
+    credentials: 'same-origin'
+  }).then(response => response.json()).then(json => ({
+    type: types.GET_POSTAL_CODES,
+    codes: json
+  }));
+}
+
+export function getBounds(map) {
+  let bounds = map.getBounds();
+  let ne = bounds.getNorthEast();
+  let sw = bounds.getSouthWest();
+  
+  let result = {
+    type: types.GET_BOUNDS,
+    bounds: {
+      ne: {
+        latitude: ne.lat(),
+        longitude: ne.lng()
+      },
+      sw: {
+        latitude: sw.lat(),
+        longitude: sw.lng()
+      }
+    }
+  };
+  
+  console.log(result);
+  
+  return result
+}
+
