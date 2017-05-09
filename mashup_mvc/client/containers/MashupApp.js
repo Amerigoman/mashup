@@ -4,40 +4,50 @@ import { bindActionCreators } from 'redux';
 import * as MashupActions from '../actions/MashupActions';
 // import Map, { GoogleApiWrapper} from '../utils/google-maps-react'
 import Map, { Marker, GoogleApiWrapper} from '../utils/src'
+import _ from 'underscore';
 
 
 class MashupApp extends Component {
 	
-  componentDidMount() {
-  	this.props.actions.getPostalCodes('49.8,36.4', '50,36.5');
-  }
-  
-  _getBounds(props, map) {
-  		this.props.actions.getBounds(map)
-  }
-	
 	render() {
-		const { pos, codes } = this.props.mashup;
-		const { actions } = this.props;
+		const { pos } = this.props.mashup;
+		// const { actions } = this.props;
 		
-		console.log(this.props.mashup);
-		console.log(actions);
+		// console.log(this.props.mashup);
+		// console.log('In render!!!');
 		
 		return (
 			<div>
 				<Map google={this.props.google}
 				     clickableIcons={true}
 				     initialCenter={pos}
-				     zoom={14}
+				     zoom={13}
 				     
-				     // onReady={ this._getBounds }
-				     onDragend={ this._update  }
-				     onZoom_changed={ this._update }
-				     onDragstart={ this._removeMarkers }>
+				     onIdle={ this._update.bind(this) }
+				     // onDragend={ this._update }
+				     // onZoom_changed={ this._update }
+				     // onDragstart={ this._removeMarkers }
+					>
 					{ this._renderCodes() }
 				</Map>
 			</div>
     )
+  }
+  
+  shouldComponentUpdate(nextProps, nextState) {
+		let codes = this.props.mashup.codes;
+		let nextCodes = nextProps.mashup.codes;
+		
+		if(typeof codes === 'undefined' || typeof nextCodes === 'undefined' ||
+			codes.length !== nextCodes.length) {
+			return true;
+		}
+		
+		let codesSorted = this.props.mashup.codes.sort(this._compare);
+		let nextCodesSorted = nextProps.mashup.codes.sort(this._compare);
+		let result = _.isEqual(codesSorted, nextCodesSorted);
+		
+		return !result;
   }
   
   _renderCodes() {
@@ -62,18 +72,27 @@ class MashupApp extends Component {
 		let ne = bounds.getNorthEast();
 		let sw = bounds.getSouthWest();
 		
-		// console.log(ne.lat(), ne.lng());
-		// console.log(sw.lat(), sw.lng());
-	// 	actions.getPostalCodes(
-	// 		sw.lat() + ',' + sw.lng(),
-	// 		ne.lat() + ',' + ne.lng(),
-	// 	)
+		this.props.actions.getPostalCodes(
+			sw.lat() + ',' + sw.lng(),
+			ne.lat() + ',' + ne.lng()
+		);
 	}
 	
 	_removeMarkers() {
 		console.log('remove markers');
 	}
+	
+	_compare(a, b) {
+		let a_value = Number(a.url.split('/').slice(-2, -1)[0]);
+		let b_value = Number(b.url.split('/').slice(-2, -1)[0]);
+		
+		
+		if(a_value < b_value) return -1;
+		if(a_value > b_value) return 1;
+		return 0;
+	}
 }
+
 
 function mashup() {
 	return GoogleApiWrapper({
@@ -86,6 +105,7 @@ function mashup() {
 		version: '3.26'
 	})(MashupApp)
 }
+
 
 function mapState(state) {
   return {

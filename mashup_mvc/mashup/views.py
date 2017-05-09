@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+import requests
+import os
+import json
+import pprint
+from bs4 import BeautifulSoup
+from lxml import html
+from selenium import webdriver
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Q
@@ -9,6 +18,30 @@ from .serializers import PostalCodeSerializer,\
 
 def index(request):
     return render(request, "index.html")
+
+
+def get_articles(request, place):
+    result = []
+    url = 'https://news.google.com.ua/news/' \
+          'section?cf=all&pz=1&ned=uk_ua&geo=' + place
+
+    content = requests.get(url).content
+    parsed_html = BeautifulSoup(content, 'lxml')
+
+    articles = parsed_html.body.find_all('a', attrs={'class': 'article'})
+
+    for item in articles:
+        title = item.find('span', attrs={'class': 'titletext'})
+        if title:
+            result.append({
+                "href": item['href'],
+                "title": title.text,
+            })
+
+    json_result = json.dumps(result, ensure_ascii=False).encode('utf-8')
+    pprint.pprint(result)
+
+    return HttpResponse(json_result)
 
 
 class PostalCodeViewSet(viewsets.ModelViewSet):

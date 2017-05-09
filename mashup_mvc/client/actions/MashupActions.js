@@ -25,28 +25,3 @@ export function getPostalCodes(sw, ne) {
     codes: json
   }));
 }
-
-export function getBounds(map) {
-  let bounds = map.getBounds();
-  let ne = bounds.getNorthEast();
-  let sw = bounds.getSouthWest();
-  
-  let result = {
-    type: types.GET_BOUNDS,
-    bounds: {
-      ne: {
-        latitude: ne.lat(),
-        longitude: ne.lng()
-      },
-      sw: {
-        latitude: sw.lat(),
-        longitude: sw.lng()
-      }
-    }
-  };
-  
-  console.log(result);
-  
-  return result
-}
-
