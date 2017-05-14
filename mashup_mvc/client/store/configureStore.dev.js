@@ -1,11 +1,12 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import promise from 'redux-promise';
+import { createLogger } from 'redux-logger'
 import { persistState } from 'redux-devtools';
 import rootReducer from '../reducers';
 import DevTools from '../containers/DevTools'
 
 const enhancer = compose(
-  applyMiddleware(promise),
+  applyMiddleware(promise, createLogger()),
   DevTools.instrument(),
   persistState(
     window.location.href.match(

@@ -3,9 +3,8 @@ from django.utils.translation import ugettext as _
 
 
 class PostalCode(models.Model):
-    postal_code = models.PositiveIntegerField(
-        unique=True, verbose_name=_('Postal Code'),
-        primary_key=True
+    postal_code = models.CharField(
+        unique=True, verbose_name=_('Postal Code'), max_length=8
     )
     area = models.CharField(max_length=64, verbose_name=_('Area'))
     region = models.CharField(max_length=64, verbose_name=_('Region'))

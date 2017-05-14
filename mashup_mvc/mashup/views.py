@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 import requests
-import os
 import json
 import pprint
 from bs4 import BeautifulSoup
-from lxml import html
-from selenium import webdriver
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from .models import PostalCode, Street
 from rest_framework import viewsets, generics
@@ -20,14 +17,31 @@ def index(request):
     return render(request, "index.html")
 
 
-def get_articles(request, place):
+def search_codes(request, text):
+    result = PostalCode.objects.filter(pk=int(text)).values(
+        'postal_code', 'area', 'region', 'city'
+    )
+
+    return JsonResponse({'result': list(result)})
+
+
+def get_articles(request):
     result = []
-    url = 'https://news.google.com.ua/news/' \
-          'section?cf=all&pz=1&ned=uk_ua&geo=' + place
+    params_list = []
+
+    place = request.GET.get('place', None)
+    lang = request.GET.get('lang', None)
+
+    if place:
+        params_list.append('geo={}'.format(place))
+    if lang:
+        params_list.append('hl={}'.format(lang))
+
+    params = '&'.join(params_list)
+    url = 'https://news.google.com.ua/news/section?' + params
 
     content = requests.get(url).content
     parsed_html = BeautifulSoup(content, 'lxml')
-
     articles = parsed_html.body.find_all('a', attrs={'class': 'article'})
 
     for item in articles:
@@ -39,7 +53,8 @@ def get_articles(request, place):
             })
 
     json_result = json.dumps(result, ensure_ascii=False).encode('utf-8')
-    pprint.pprint(result)
+    # pprint.pprint(result)
+    print(params)
 
     return HttpResponse(json_result)
 

@@ -95,3 +95,8 @@ h3 {
 .error {
   color: #FF0000;
 }
+
+.search-container {
+  position: absolute;
+  margin: 50px 0 0 50px;
+}

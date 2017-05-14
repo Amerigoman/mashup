@@ -25,3 +25,46 @@ export function getPostalCodes(sw, ne) {
     codes: json
   }));
 }
+
+let articles = {};
+
+export function getArticles(place, lang='ua') {
+  let params_array = [`place=${place}`, `lang=${lang}`];
+  let params = '?' + params_array.join('&');
+  
+  let key = place + ':' + lang;
+  console.log(key in articles);
+  
+  if (!(key in articles))
+    return fetch(Urls['mashup:articles']() + params, {
+      credentials: 'same-origin'
+    }).then(response => response.json()).then(function(json) {
+      articles[key] = json;
+      
+      return {
+        type: types.GET_ARTICLES,
+        articles: articles
+      }
+    });
+  else return {
+      type: types.GET_ARTICLES_SAME,
+    }
+}
+
+export function setInfoWindow(selectedPlace, activeMarker) {
+  console.log('setInfoWindow');
+  return {
+    type: types.SET_INFO_WINDOW,
+    activeMarker: activeMarker
+  }
+}
+
+export function searchCodes(text) {
+  console.log(text);
+  return fetch(Urls['mashup:search_codes'](text), {
+    credentials: 'same-origin'
+  }).then(response => response.json()).then(json => ({
+    type: types.SEARCH_CODE,
+    foundCodes: json.result
+  }));
+}
