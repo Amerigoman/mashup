@@ -31,40 +31,49 @@ let articles = {};
 export function getArticles(place, lang='ua') {
   let params_array = [`place=${place}`, `lang=${lang}`];
   let params = '?' + params_array.join('&');
+  let articleFetchedOnce = place in articles;
+  let langFetched = null;
+  if(articleFetchedOnce) {
+    langFetched = lang in articles[place]
+  }
   
-  let key = place + ':' + lang;
-  console.log(key in articles);
+  console.log(articleFetchedOnce);
+  console.log(place, lang, params);
   
-  if (!(key in articles))
+  if (!articleFetchedOnce || !langFetched)
     return fetch(Urls['mashup:articles']() + params, {
       credentials: 'same-origin'
     }).then(response => response.json()).then(function(json) {
-      articles[key] = json;
+      if(!articleFetchedOnce)
+        articles[place] = {};
+      articles[place][lang] = json;
       
       return {
         type: types.GET_ARTICLES,
-        articles: articles
+        articles: articles,
+        chosenMarker: place
       }
     });
-  else return {
-      type: types.GET_ARTICLES_SAME,
-    }
-}
-
-export function setInfoWindow(selectedPlace, activeMarker) {
-  console.log('setInfoWindow');
-  return {
-    type: types.SET_INFO_WINDOW,
-    activeMarker: activeMarker
+  else {
+	  return {
+		  type: types.GET_ARTICLES_SAME,
+		  chosenMarker: place
+	  }
   }
 }
 
 export function searchCodes(text) {
-  console.log(text);
   return fetch(Urls['mashup:search_codes'](text), {
     credentials: 'same-origin'
   }).then(response => response.json()).then(json => ({
     type: types.SEARCH_CODE,
     foundCodes: json.result
   }));
+}
+
+export function setCenter(lat, lng) {
+  return {
+    type: types.SET_CENTER,
+    position: {lat: lat, lng: lng}
+  }
 }

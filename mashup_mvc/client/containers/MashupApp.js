@@ -5,80 +5,76 @@ import * as MashupActions from '../actions/MashupActions';
 // import { InfoWindow } from '../utils/google-maps-react'
 import Map, { Marker, InfoWindow,  GoogleApiWrapper} from '../utils/src'
 import SearchContainer from '../components/SearchContainer';
+import ArticlesContainer from '../components/ArticlesContainer'
 import _ from 'underscore';
 
 
 class MashupApp extends Component {
 	
 	render() {
-		const { pos, iwIsVisible, activeMarker, codes } = this.props.mashup;
+		const { pos, articles, chosenMarker, codes, foundCodes } = this.props.mashup;
 		const { actions } = this.props;
 		
-		// console.log('In render!!!');
+	  // console.log(foundCodes);
 		
 		return (
 			<div>
 				<Map google={this.props.google }
 				     clickableIcons={true}
 				     initialCenter={pos}
+				     center={pos}
 				     zoom={16}
+				     zoomControl={true}
 				     
+				     onZoom_changed={this._handleZoomChanged}
 				     onIdle={ this._update.bind(this) }
 					>
-					{codes && codes.map( (code, index) => (
-						(<Marker title={code.city + ' ' + code.url.split('/').slice(-2, -1)[0]}
+					{codes && codes.map( code =>
+						<Marker title={code.city + ' ' + code.postal_code}
 						        name={code.city}
 						        position={
 						        	{ lat: code.latitude, lng: code.longitude }
 						        }
-						        onClick={ (props, marker) => this._onMarkerClick(props, marker) }
+						        onClick={ this._onMarkerClick.bind(this, code) }
 						        key={code.url.split('/').slice(-2, -1)[0]}
-						>
-								<InfoWindow
-									marker={activeMarker}
-									visible={iwIsVisible}
-									key={(index+1)*code.url.split('/').slice(-2, -1)[0]}>
-									<div>
-										<h1>{iwIsVisible}</h1>
-									</div>
-								</InfoWindow>
-							</Marker>
-						)))}
-					
+						/>
+						)}
 				</Map>
-				<SearchContainer searchCodes={ actions.searchCodes } />
+				<SearchContainer searchCodes={ actions.searchCodes }
+				                 actions={actions}
+				                 foundCodes={foundCodes} />
+				<ArticlesContainer articles={articles}
+				                   chosenMarker={chosenMarker}
+				                   getArticles={actions.getArticles} />
 			</div>
     )
   }
   
-  _onMarkerClick(props, marker) {
-		console.log(props);
-		console.log(marker);
-		// console.log(index);
-		this.props.actions.setInfoWindow(props, marker);
-		//
-		// this.props.actions.getArticles.bind(
-		// 	this,
-		// 	code.city + ',' + code.url.split('/').slice(-2, -1)[0],
-		// 	'ua'
-		// )
+  _onMarkerClick(code, props, marker) {
+		
+		// console.log(props);
+		// console.log(marker);
+		// this.props.actions.setInfoWindow(props, marker);
+	  
+	  let place = code.city + ',' + code.postal_code;
+		this.props.actions.getArticles(place, 'ua');
   }
   
-  shouldComponentUpdate(nextProps, nextState) {
-		let codes = this.props.mashup.codes;
-		let nextCodes = nextProps.mashup.codes;
-
-		if(typeof codes === 'undefined' || typeof nextCodes === 'undefined' ||
-			codes.length !== nextCodes.length) {
-			return true;
-		}
-
-		let codesSorted = this.props.mashup.codes.sort(this._compare);
-		let nextCodesSorted = nextProps.mashup.codes.sort(this._compare);
-		let result = _.isEqual(codesSorted, nextCodesSorted);
-
-		return !result;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+		// let codes = this.props.mashup.codes;
+		// let nextCodes = nextProps.mashup.codes;
+  //
+		// if(typeof codes === 'undefined' || typeof nextCodes === 'undefined' ||
+		// 	codes.length !== nextCodes.length) {
+		// 	return true;
+		// }
+  //
+		// let codesSorted = this.props.mashup.codes.sort(this._compare);
+		// let nextCodesSorted = nextProps.mashup.codes.sort(this._compare);
+		// let result = _.isEqual(codesSorted, nextCodesSorted);
+  //
+		// return !result;
+  // }
   
   _compare(a, b) {
 		let a_value = Number(a.url.split('/').slice(-2, -1)[0]);

@@ -3,6 +3,7 @@ export const GET_ARTICLES = 'GET_ARTICLES';
 export const GET_ARTICLES_SAME = 'GET_ARTICLES_SAME';
 export const SET_INFO_WINDOW = 'SET_INFO_WINDOW';
 export const SEARCH_CODE = 'SEARCH_CODE';
+export const SET_CENTER = 'SET_CENTER';
 
 // export const ADD_TODO = 'ADD_TODO';
 // export const DELETE_TODO = 'DELETE_TODO';

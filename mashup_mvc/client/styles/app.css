@@ -98,5 +98,50 @@ h3 {
 
 .search-container {
   position: absolute;
-  margin: 50px 0 0 50px;
+  margin: 10px 0 0 125px;
+  box-shadow: 0 3px 8px 0 rgba(0,0,0,.18);
+  border-radius: 0 0 6px 6px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.suggestions {
+  background-color: #fff;
+  max-height: 300px;
+  color: #222;
+  cursor: pointer;
+  overflow: auto;
+}
+
+.search-container li {
+  padding: 6px 16px;
+}
+
+.search-container li:hover {
+  background-color: #cde;
+}
+
+.articles-container {
+  /*margin: 10px 25px 0 0;*/
+  position: relative;
+  float: right;
+}
+
+.article {
+  float: right;
+  background-color: #fff;
+}
+
+.article li {
+  padding: 6px 16px;
+}
+
+.hidden {
+  display: none;
+}
+
+.toggle-button {
+  float: left;
+  cursor: pointer;
+  background-color: #fff;
 }

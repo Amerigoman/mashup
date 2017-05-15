@@ -3,16 +3,15 @@ import {
   GET_ARTICLES_SAME,
   GET_ARTICLES,
   SET_INFO_WINDOW,
-  SEARCH_CODE
+  SEARCH_CODE,
+  SET_CENTER
 } from '../constants/MashupTypes';
 
 const initialState = {
   pos: { lat: 49.9151803, lng: 36.416867 },
   articles: {},
-  fetching: false,
-  iwIsVisible: false,
-  activeMarker: {},
-  selectedPlace: {}
+  foundCodes: [],
+  chosenMarker: ''
 };
 
 export default function mashup(state = initialState, action) {
@@ -22,18 +21,19 @@ export default function mashup(state = initialState, action) {
     return { ...state, codes: action.codes };
     
   case GET_ARTICLES:
-    return Object.assign({}, state, {
-      articles: action.articles
-    });
+    return { ...state, articles: action.articles, chosenMarker: action.chosenMarker };
     
   case GET_ARTICLES_SAME:
-    return { ...state };
+    return { ...state, chosenMarker: action.chosenMarker };
     
-  case SET_INFO_WINDOW:
-    return { ...state, activeMarker: action.activeMarker, iwIsVisible: true };
+  // case SET_INFO_WINDOW:
+  //   return { ...state, activeMarker: action.activeMarker };
     
   case SEARCH_CODE:
     return { ...state, foundCodes: action.foundCodes };
+    
+  case SET_CENTER:
+    return { ...state, pos: action.position, foundCodes: []};
     
   // case ADD_TODO:
   //   return [...state, action.todo];

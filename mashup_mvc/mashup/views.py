@@ -18,8 +18,8 @@ def index(request):
 
 
 def search_codes(request, text):
-    result = PostalCode.objects.filter(pk=int(text)).values(
-        'postal_code', 'area', 'region', 'city'
+    result = PostalCode.objects.filter(postal_code__contains=text).values(
+        'postal_code', 'area', 'region', 'city', 'latitude', 'longitude'
     )
 
     return JsonResponse({'result': list(result)})
