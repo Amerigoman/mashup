@@ -26,6 +26,8 @@ export default class Articles extends Component {
 	cutString(text, maxStrLength){
     if(text.length > maxStrLength) {
         let pattern = /^(.{maxStrLength}[^\s]*).*/; // ^(.{11}[^\s]*).*/
+	      console.log(text.replace(pattern, '$1'));
+	      
         return text.replace(pattern, '$1');
     }
     
