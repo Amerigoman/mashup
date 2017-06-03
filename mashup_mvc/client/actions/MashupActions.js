@@ -28,7 +28,8 @@ export function getPostalCodes(sw, ne) {
 
 let articles = {};
 
-export function getArticles(place, lang='ua') {
+export function getArticles(place, lang) {
+  console.log(place);
   let params_array = [`place=${place}`, `lang=${lang}`];
   let params = '?' + params_array.join('&');
   let articleFetchedOnce = place in articles;
@@ -37,8 +38,8 @@ export function getArticles(place, lang='ua') {
     langFetched = lang in articles[place]
   }
   
-  console.log(articleFetchedOnce);
-  console.log(place, lang, params);
+  // console.log(articleFetchedOnce);
+  // console.log(place, lang, params);
   
   if (!articleFetchedOnce || !langFetched)
     return fetch(Urls['mashup:articles']() + params, {

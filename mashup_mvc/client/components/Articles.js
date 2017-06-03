@@ -1,34 +1,51 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { SHOW_RU, SHOW_UA, SHOW_EN } from '../constants/ArticlesFilters';
-
-const ARTICLES_FILTERS = {
-  [SHOW_RU]: SHOW_RU,
-  [SHOW_UA]: SHOW_RU,
-  [SHOW_EN]: SHOW_RU
-};
 
 export default class Articles extends Component {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {filter: SHOW_UA};
 	}
 	
 	render() {
-	  const { articles } = this.props;
+	  const { lang, articles } = this.props;
 	  
 		return (
-      <ul>
-        {'ua' in articles && articles.ua.map(article =>
-          <li key={article.href}>
-            <a href={article.href} target='_blank'>{article.title}</a>
-          </li >
-        )}
-      </ul>
+			<div>
+				<ul className='article'>
+					{this.loading()}
+					{lang in articles && articles[lang].map(article =>
+						<li key={article.href}>
+							<a href={article.href} target='_blank'>{this.cutString(article.title, 20)}</a>
+						</li>
+					)}
+					</ul>
+			</div>
 		);
+	}
+	
+	cutString(text, maxStrLength){
+    if(text.length > maxStrLength) {
+        let pattern = /^(.{maxStrLength}[^\s]*).*/; // ^(.{11}[^\s]*).*/
+        return text.replace(pattern, '$1');
+    }
+    
+    return text;
+	}
+	
+	loading() {
+		const { lang, articles } = this.props;
+		
+		if (!(lang in articles)) {
+			return (
+				<div>
+					loading...
+				</div>
+			)
+		}
 	}
 }
 
 Articles.propTypes = {
-  articles: PropTypes.object
+  articles: PropTypes.object,
+	lang: PropTypes.string.isRequired
 };

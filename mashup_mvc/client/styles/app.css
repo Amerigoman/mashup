@@ -42,6 +42,10 @@ table {
   border-spacing: 0;
 }
 
+* {
+  box-sizing: border-box!important;
+}
+
 /*end reset*/
 
 h3 {
@@ -122,26 +126,141 @@ h3 {
 }
 
 .articles-container {
-  /*margin: 10px 25px 0 0;*/
   position: relative;
   float: right;
 }
 
+@keyframes show {
+  from {width: 0;}
+  to {width: calc(100% - 25px);}
+}
+
+.show {
+  -webkit-animation: show 3s ease-in-out;
+  -o-animation: show 3s ease-in-out;
+  animation: show 3s ease-in-out;
+}
+
+@keyframes hide {
+  from {width: 100%;}
+  to {width: 0;}
+}
+
+.hide {
+  -webkit-animation: show 3s ease-in-out;
+  -o-animation: show 3s ease-in-out;
+  animation: show 3s ease-in-out;
+}
+
 .article {
-  float: right;
-  background-color: #fff;
+  max-height: 40%;
+  overflow: auto;
+  padding-bottom: 8px;
 }
 
 .article li {
   padding: 6px 16px;
 }
 
+.article a {
+  transition: color .4s;
+  color: #265C83;
+  text-decoration: none;
+}
+
+.article a:link,
+.article a:visited { color: #265C83; }
+.article a:hover   {
+  color: #4FaBe6;
+  text-decoration: underline;
+}
+.article a:active  {
+  transition: color .3s;
+  color: #007BE6;
+}
+
 .hidden {
   display: none;
 }
 
-.toggle-button {
+.toggle {
   float: left;
-  cursor: pointer;
+  margin: 10px;
+  position: relative;
+  background-size: 24px 48px;
   background-color: #fff;
+  cursor: pointer;
+  border-right: 1px solid #eee;
+  border-radius: 2px;
+  box-shadow: -1px 2px 5px 0 rgba(0,0,0,0.3);
+}
+
+.toggle_open {
+  display:inline-block;
+  width: 24px;
+  height: 48px;
+  background-size: 24px 48px;
+  background-image: url('../../static/image/arrow-right.png');
+  transform: scale(-1);
+}
+
+.toggle_close {
+  display:inline-block;
+  width: 24px;
+  height: 48px;
+  background-size: 24px 48px;
+  background-image: url('../../static/image/arrow-right.png');
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.lang-article-container {
+  float: right;
+  background-color: #fff;
+  border-bottom-left-radius: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.toggle-language {
+  height: 35px;
+  display: inline-block;
+  font-weight: bold;
+  background-color: #fff;
+  padding: 5px 50px;
+}
+
+.toggle-language li {
+  margin: 0 2px;
+  padding: 5px 15px;
+  color: #265C83;
+  text-decoration: none;
+  transition: all .2s;
+}
+
+.toggle-language li:hover {
+  background: #1ABC9C;
+  color: #fff;
+}
+
+.active {
+  background: #1ABC9C;
+  color: #fff!important;
+}
+
+.title {
+  display: inline-block;
+  padding: 12px 0 0 15px;
+  color: #1ABC9C;
+  font-weight: 600;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.head-container {
+  border-bottom: 1px solid #cde;
 }

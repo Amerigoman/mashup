@@ -12,10 +12,10 @@ import _ from 'underscore';
 class MashupApp extends Component {
 	
 	render() {
-		const { pos, articles, chosenMarker, codes, foundCodes } = this.props.mashup;
+		const { pos, articles, chosenMarker, foundCodes } = this.props.mashup;
 		const { actions } = this.props;
 		
-	  // console.log(foundCodes);
+		console.log(chosenMarker);
 		
 		return (
 			<div>
@@ -29,16 +29,7 @@ class MashupApp extends Component {
 				     onZoom_changed={this._handleZoomChanged}
 				     onIdle={ this._update.bind(this) }
 					>
-					{codes && codes.map( code =>
-						<Marker title={code.city + ' ' + code.postal_code}
-						        name={code.city}
-						        position={
-						        	{ lat: code.latitude, lng: code.longitude }
-						        }
-						        onClick={ this._onMarkerClick.bind(this, code) }
-						        key={code.url.split('/').slice(-2, -1)[0]}
-						/>
-						)}
+					{this.renderMarkers()}
 				</Map>
 				<SearchContainer searchCodes={ actions.searchCodes }
 				                 actions={actions}
@@ -48,6 +39,23 @@ class MashupApp extends Component {
 				                   getArticles={actions.getArticles} />
 			</div>
     )
+  }
+  
+  renderMarkers() {
+		const { codes } = this.props.mashup;
+		
+		console.log(codes);
+		
+		if(codes)
+			return codes.map( code =>
+				<Marker title={code.city + ' ' + code.postal_code}
+				        name={code.city}
+				        position={
+				          { lat: code.latitude, lng: code.longitude }
+				        }
+				        onClick={ this._onMarkerClick.bind(this, code) }
+				        key={code.url.split('/').slice(-2, -1)[0]}
+				/>);
   }
   
   _onMarkerClick(code, props, marker) {
