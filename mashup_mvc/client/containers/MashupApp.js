@@ -15,8 +15,6 @@ class MashupApp extends Component {
 		const { pos, articles, chosenMarker, foundCodes } = this.props.mashup;
 		const { actions } = this.props;
 		
-		console.log(chosenMarker);
-		
 		return (
 			<div>
 				<Map google={this.props.google }
@@ -44,8 +42,6 @@ class MashupApp extends Component {
   renderMarkers() {
 		const { codes } = this.props.mashup;
 		
-		console.log(codes);
-		
 		if(codes)
 			return codes.map( code =>
 				<Marker title={code.city + ' ' + code.postal_code}
@@ -59,11 +55,6 @@ class MashupApp extends Component {
   }
   
   _onMarkerClick(code, props, marker) {
-		
-		// console.log(props);
-		// console.log(marker);
-		// this.props.actions.setInfoWindow(props, marker);
-	  
 	  let place = code.city + ',' + code.postal_code;
 		this.props.actions.getArticles(place, 'ua');
   }

@@ -5,12 +5,14 @@ import {
   SEARCH_CODE,
   SET_CENTER
 } from '../constants/MashupTypes';
+import { EN, RU, UA } from '../constants/ArticlesFilters';
 
 const initialState = {
   pos: { lat: 49.9151803, lng: 36.416867 },
   articles: {},
   foundCodes: [],
-  chosenMarker: ''
+  chosenMarker: '',
+  filter: UA
 };
 
 export default function mashup(state = initialState, action) {

@@ -1,52 +1,76 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+
 export default class Articles extends Component {
 	constructor(props, context) {
 		super(props, context);
 	}
 	
 	render() {
-	  const { lang, articles } = this.props;
-	  
 		return (
 			<div>
-				<ul className='article'>
-					{this.loading()}
-					{lang in articles && articles[lang].map(article =>
-						<li key={article.href}>
-							<a href={article.href} target='_blank'>{this.cutString(article.title, 20)}</a>
-						</li>
-					)}
-					</ul>
+				{this.loading()}
+				{this.renderArticles()}
 			</div>
 		);
 	}
 	
 	cutString(text, maxStrLength){
     if(text.length > maxStrLength) {
-        let pattern = /^(.{maxStrLength}[^\s]*).*/; // ^(.{11}[^\s]*).*/
-	      console.log(text.replace(pattern, '$1'));
-        return text.replace(pattern, '$1');
+    	let prettyCut = text.slice(0, maxStrLength);
+    	prettyCut = prettyCut.slice(0, this.regexLastIndexOf(prettyCut, /[.,]?[\s]/));
+    	
+    	return prettyCut + '...';
     }
     
     return text;
 	}
 	
-	loading() {
+	regexLastIndexOf(str, regex, startpos) {
+    regex = (regex.global) ? regex : new RegExp(regex.source, "g" + (regex.ignoreCase ? "i" : "") + (regex.multiLine ? "m" : ""));
+    if(typeof (startpos) === "undefined") {
+        startpos = str.length;
+    } else if(startpos < 0) {
+        startpos = 0;
+    }
+    let stringToWorkWith = str.substring(0, startpos + 1);
+    let lastIndexOf = -1;
+    let nextStop = 0;
+    let result;
+    while((result = regex.exec(stringToWorkWith)) !== null) {
+        lastIndexOf = result.index;
+        regex.lastIndex = ++nextStop;
+    }
+    return lastIndexOf;
+}
+	
+	renderArticles() {
 		const { lang, articles } = this.props;
 		
-		if (!(lang in articles)) {
+		if (lang in articles )
 			return (
-				<div>
-					loading...
-				</div>
+				<ul className='article'>
+					{ articles[lang].map(article =>
+						<li key={article.href}>
+							<a href={article.href} target='_blank'>{this.cutString(article.title, 75)}</a>
+						</li>
+					)}
+				</ul>
 			)
+	}
+	
+	loading() {
+		const { lang, articles, chosenMarker } = this.props;
+		
+		if (!(lang in articles) && chosenMarker) {
+			return <div className='spinner' />
 		}
 	}
 }
 
 Articles.propTypes = {
   articles: PropTypes.object,
-	lang: PropTypes.string.isRequired
+	lang: PropTypes.string.isRequired,
+	chosenMarker: PropTypes.string.isRequired
 };

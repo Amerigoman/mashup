@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Articles from '../components/Articles';
-import ArticlesToggle from '../components/ArticlesToggle';
 import { RU, UA, EN } from '../constants/ArticlesFilters';
 
 const ARTICLES_FILTERS = {
@@ -44,8 +43,11 @@ export default class ArticlesContainer extends Component {
   	
   	return (
   		<div className='head-container'>
-			  <h1 className='title pull-left'>{chosenMarker}</h1>
-			  <ul className='toggle-language'>
+			  <h1 className='title pull-left'>{chosenMarker ? chosenMarker : 'Choose a place'}</h1>
+			  <ul className={classnames({
+				  'toggle-language': true,
+				  hidden: !chosenMarker
+			  })}>
 			  { languages.map( lang => <li key={lang}
 			                               style={{ cursor: 'hand' }}
 			                               className={classnames({
@@ -90,7 +92,7 @@ export default class ArticlesContainer extends Component {
   	const { articles, chosenMarker } = this.props;
   	let chosenArticles = chosenMarker in articles ? articles[chosenMarker] : {};
   	
-	  return <Articles articles={chosenArticles} lang={this.state.filter} />
+	  return <Articles articles={chosenArticles} lang={this.state.filter} chosenMarker={chosenMarker} />
   }
   
   toggleArticles() {
