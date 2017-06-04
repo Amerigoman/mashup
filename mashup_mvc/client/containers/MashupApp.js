@@ -2,17 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as MashupActions from '../actions/MashupActions';
-// import { InfoWindow } from '../utils/google-maps-react'
 import Map, { Marker, InfoWindow,  GoogleApiWrapper} from '../utils/src'
 import SearchContainer from '../components/SearchContainer';
 import ArticlesContainer from '../components/ArticlesContainer'
-import _ from 'underscore';
 
 
 class MashupApp extends Component {
 	
 	render() {
-		const { pos, articles, chosenMarker, foundCodes } = this.props.mashup;
+		const { pos, foundCodes } = this.props.mashup;
 		const { actions } = this.props;
 		
 		return (
@@ -32,9 +30,8 @@ class MashupApp extends Component {
 				<SearchContainer searchCodes={ actions.searchCodes }
 				                 actions={actions}
 				                 foundCodes={foundCodes} />
-				<ArticlesContainer articles={articles}
-				                   chosenMarker={chosenMarker}
-				                   getArticles={actions.getArticles} />
+				<ArticlesContainer mashup={this.props.mashup}
+				                   actions={actions} />
 			</div>
     )
   }
@@ -55,8 +52,13 @@ class MashupApp extends Component {
   }
   
   _onMarkerClick(code, props, marker) {
+		let { lang, chosenMarker } = this.props.mashup;
 	  let place = code.city + ',' + code.postal_code;
-		this.props.actions.getArticles(place, 'ua');
+	  
+	  if (chosenMarker !== place)
+	  	this.props.actions.resetPlace(place);
+	  
+		this.props.actions.getArticles(place, lang);
   }
   
   // shouldComponentUpdate(nextProps, nextState) {

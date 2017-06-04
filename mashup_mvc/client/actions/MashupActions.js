@@ -47,14 +47,12 @@ export function getArticles(place, lang) {
       
       return {
         type: types.GET_ARTICLES,
-        articles: articles,
-        chosenMarker: place
+        articles: articles
       }
     });
   else {
 	  return {
-		  type: types.GET_ARTICLES_SAME,
-		  chosenMarker: place
+		  type: types.GET_ARTICLES_SAME
 	  }
   }
 }
@@ -72,5 +70,19 @@ export function setCenter(lat, lng) {
   return {
     type: types.SET_CENTER,
     position: {lat: lat, lng: lng}
+  }
+}
+
+export function setLanguageFilter(lang) {
+  return {
+    type: types.SET_LANGUAGE,
+    lang: lang
+  }
+}
+
+export function resetPlace(place) {
+  return {
+    type: types.RESET_PLACE,
+    chosenMarker: place
   }
 }

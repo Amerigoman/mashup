@@ -48,7 +48,7 @@ export default class Articles extends Component {
 	renderArticles() {
 		const { lang, articles } = this.props;
 		
-		if (lang in articles )
+		if (lang in articles && articles[lang].length) {
 			return (
 				<ul className='article'>
 					{ articles[lang].map(article =>
@@ -58,6 +58,11 @@ export default class Articles extends Component {
 					)}
 				</ul>
 			)
+		} else if (lang in articles && !articles[lang].length) {
+			return (
+				<h1 className='title'>There is no article for this place</h1>
+			)
+		}
 	}
 	
 	loading() {

@@ -3,7 +3,9 @@ import {
   GET_ARTICLES_SAME,
   GET_ARTICLES,
   SEARCH_CODE,
-  SET_CENTER
+  SET_CENTER,
+  SET_LANGUAGE,
+  RESET_PLACE
 } from '../constants/MashupTypes';
 import { EN, RU, UA } from '../constants/ArticlesFilters';
 
@@ -12,7 +14,7 @@ const initialState = {
   articles: {},
   foundCodes: [],
   chosenMarker: '',
-  filter: UA
+  lang: UA
 };
 
 export default function mashup(state = initialState, action) {
@@ -22,10 +24,10 @@ export default function mashup(state = initialState, action) {
     return { ...state, codes: action.codes };
     
   case GET_ARTICLES:
-    return { ...state, articles: action.articles, chosenMarker: action.chosenMarker };
+    return { ...state, articles: action.articles };
     
   case GET_ARTICLES_SAME:
-    return { ...state, chosenMarker: action.chosenMarker };
+    return { ...state };
     
   case SEARCH_CODE:
     return { ...state, foundCodes: action.foundCodes };
@@ -33,7 +35,12 @@ export default function mashup(state = initialState, action) {
   case SET_CENTER:
     return { ...state, pos: action.position, foundCodes: []};
     
+  case SET_LANGUAGE:
+    return { ...state, lang: action.lang };
 
+  case RESET_PLACE:
+    return { ...state, chosenMarker: action.chosenMarker };
+  
   default:
     return state;
   }

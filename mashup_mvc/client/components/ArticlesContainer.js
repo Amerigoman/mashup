@@ -15,8 +15,7 @@ export default class ArticlesContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-    	articlesIsVisible: false,
-	    filter: UA
+    	articlesIsVisible: false
     };
   }
 
@@ -36,7 +35,7 @@ export default class ArticlesContainer extends Component {
   }
   
   renderToggleLanguage() {
-  	let { chosenMarker } = this.props;
+  	let { chosenMarker } = this.props.mashup;
   	let languages = Object.keys(ARTICLES_FILTERS).map(function(key) {
   		return ARTICLES_FILTERS[key];
   	});
@@ -51,7 +50,7 @@ export default class ArticlesContainer extends Component {
 			  { languages.map( lang => <li key={lang}
 			                               style={{ cursor: 'hand' }}
 			                               className={classnames({
-				                               active: lang === this.state.filter,
+				                               active: lang === this.props.mashup.lang,
 				                               'pull-right': true
 			                               })}
 			                               onClick={this.handleLangOnClick.bind(this, lang)}
@@ -67,13 +66,12 @@ export default class ArticlesContainer extends Component {
   }
   
   handleLangOnClick(lang) {
-  	let currentLang = this.state.filter;
-  	let { chosenMarker, getArticles } = this.props;
-  	
+  	let { currentLang, chosenMarker } = this.props.mashup;
+  	let { getArticles, setLanguageFilter } = this.props.actions;
   	
   	if (currentLang !== lang) {
   		getArticles(chosenMarker, lang);
-  		this.setState({ ...this.state, filter: lang });
+  		setLanguageFilter(lang);
 	  }
   }
   
@@ -89,10 +87,10 @@ export default class ArticlesContainer extends Component {
   }
   
   renderArticles() {
-  	const { articles, chosenMarker } = this.props;
+  	const { articles, chosenMarker, lang } = this.props.mashup;
   	let chosenArticles = chosenMarker in articles ? articles[chosenMarker] : {};
   	
-	  return <Articles articles={chosenArticles} lang={this.state.filter} chosenMarker={chosenMarker} />
+	  return <Articles articles={chosenArticles} lang={lang} chosenMarker={chosenMarker} />
   }
   
   toggleArticles() {
@@ -104,7 +102,6 @@ export default class ArticlesContainer extends Component {
 }
 
 ArticlesContainer.propTypes = {
-  articles: PropTypes.object.isRequired,
-	getArticles: PropTypes.func.isRequired,
-	chosenMarker: PropTypes.string.isRequired
+	actions: PropTypes.object.isRequired,
+	mashup: PropTypes.object.isRequired
 };
