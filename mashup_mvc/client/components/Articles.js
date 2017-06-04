@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { cutString } from '../utils/functions';
 
 
 export default class Articles extends Component {
-	constructor(props, context) {
-		super(props, context);
-	}
-	
 	render() {
 		return (
 			<div>
@@ -16,35 +13,6 @@ export default class Articles extends Component {
 		);
 	}
 	
-	cutString(text, maxStrLength){
-    if(text.length > maxStrLength) {
-    	let prettyCut = text.slice(0, maxStrLength);
-    	prettyCut = prettyCut.slice(0, this.regexLastIndexOf(prettyCut, /[.,]?[\s]/));
-    	
-    	return prettyCut + '...';
-    }
-    
-    return text;
-	}
-	
-	regexLastIndexOf(str, regex, startpos) {
-    regex = (regex.global) ? regex : new RegExp(regex.source, "g" + (regex.ignoreCase ? "i" : "") + (regex.multiLine ? "m" : ""));
-    if(typeof (startpos) === "undefined") {
-        startpos = str.length;
-    } else if(startpos < 0) {
-        startpos = 0;
-    }
-    let stringToWorkWith = str.substring(0, startpos + 1);
-    let lastIndexOf = -1;
-    let nextStop = 0;
-    let result;
-    while((result = regex.exec(stringToWorkWith)) !== null) {
-        lastIndexOf = result.index;
-        regex.lastIndex = ++nextStop;
-    }
-    return lastIndexOf;
-}
-	
 	renderArticles() {
 		const { lang, articles } = this.props;
 		
@@ -53,7 +21,7 @@ export default class Articles extends Component {
 				<ul className='article'>
 					{ articles[lang].map(article =>
 						<li key={article.href}>
-							<a href={article.href} target='_blank'>{this.cutString(article.title, 75)}</a>
+							<a href={article.href} target='_blank'>{cutString(article.title, 70)}</a>
 						</li>
 					)}
 				</ul>
